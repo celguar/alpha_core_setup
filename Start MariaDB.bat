@@ -1,1 +1,0 @@
-"C:\Program Files\MariaDB 10.9\bin\mariadbd.exe" --console
