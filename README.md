@@ -9,6 +9,10 @@ Windows 10
 1. Run ```Setup Alpha Core.bat```
 2. Wait for server to finish loading. Internet is required to finish installation!
 
+## How to add maps:
+1. Run ```Update Maps.bat```
+2. Wait for script to finish loading and extracting maps.
+
 ## How to start server after setup script closed:
 1. Run ```Start Alpha Core.bat```
 2. Once server finished loading, start alpha client and login.
