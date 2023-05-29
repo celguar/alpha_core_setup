@@ -277,10 +277,41 @@ set "properpath=%properpath:\=/%"
 "%mainfolder%\alpha_tools\fart.exe" -C "%mainfolder%\alpha_core\main.py" "from time import sleep" "from time import sleep\r\n\r\nimport sys\r\nsys.path.insert(0, 'path_placeholder')"
 "%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\main.py" "path_placeholder" "%properpath%/alpha_core/"
 
+:add_client_info
+mkdir "%mainfolder%\alpha_client"
+cd "%mainfolder%\alpha_client"
+echo. > readme.txt
+echo    You can get client here: >> readme.txt
+echo. >> readme.txt
+echo    https://wowdl.net/client/World-of-Warcraft-0.5.3.3368-enUS >> readme.txt
+echo. >> readme.txt
+echo. >> readme.txt
+echo    After extracting client >> readme.txt
+echo    put the contents of Mods.zip ^& Addons.zip >> readme.txt
+echo    in the root of your 0.5.3 game folder >> readme.txt
+echo. >> readme.txt
+echo    Edit the `Interface\FrameXML\FrameXML.toc` file to enable or disable AddOns. >> readme.txt
+echo    Place a `#` to disable an AddOn, remove the `#` to enable it. >> readme.txt
+echo. >> readme.txt
+echo. >> readme.txt
+echo    Start 0.5.3 ONLY by using "Start WoW.bat" >> readme.txt
+echo    that comes with the client >> readme.txt
+xcopy /y "%mainfolder%\alpha_tools\Mods.zip" "%mainfolder%\alpha_client">nul
+xcopy /y "%mainfolder%\alpha_tools\Addons.zip" "%mainfolder%\alpha_client">nul
+
 :end_install
+cd "%mainfolder%"
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Alpha Core Installation Complete!
+ping -n 3 127.0.0.1>nul
+echo.
+echo    "alpha_client" folder has tips
+echo    for WoW Alpha client
+ping -n 5 127.0.0.1>nul
+echo.
+echo    You can add maps to Alpha Core
+echo    by running Update Maps.bat
 ping -n 5 127.0.0.1>nul
 exit
