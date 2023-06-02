@@ -7,6 +7,7 @@ set mainfolder=%CD%
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 :core_download
+if exist "%mainfolder%\alpha_core" goto python_download
 if exist "%mainfolder%\alpha_core_master.zip" goto core_extract
 echo.
 echo    Downloading Alpha Core...
@@ -95,6 +96,7 @@ cd "%mainfolder%\alpha_python"
 "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_python\api.zip" > nul
 xcopy /y "%mainfolder%\alpha_python\api-ms-win-core-path-blender\x64\api-ms-win-core-path-l1-1-0.dll" "%mainfolder%\alpha_python">nul
 del "%mainfolder%\alpha_python\api.zip"
+rmdir /Q /S "%mainfolder%\alpha_python\api-ms-win-core-path-blender"
 cd "%mainfolder%"
 
 :pip_download
@@ -320,5 +322,5 @@ echo.
 echo    Alpha Core Installation Complete!
 ping -n 3 127.0.0.1>nul
 echo.
-notepad "%mainfolder%\README.md"
+start "" "notepad.exe" "%mainfolder%\README.md"
 exit
