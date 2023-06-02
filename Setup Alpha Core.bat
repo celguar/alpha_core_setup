@@ -24,6 +24,18 @@ ping -n 2 127.0.0.1>nul
 "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_core_master.zip" > nul
 rem tar -xf "alpha_core_master.zip"
 rename "%mainfolder%\alpha-core-master" "alpha_core"
+rem CHECK INSTALL
+if not exist "%mainfolder%\alpha_core" (
+echo    Failed to install Alpha Core!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
 :python_download
 if exist "%mainfolder%\python_3.9.9_win64.zip" goto python_extract
 cls
@@ -43,6 +55,17 @@ ping -n 2 127.0.0.1>nul
 if not exist "%mainfolder%\alpha_python" mkdir "%mainfolder%\alpha_python"
 "%mainfolder%\alpha_tools\7za.exe" -y -spf e -o"%mainfolder%\alpha_python" "%mainfolder%\python_3.9.9_win64.zip" > nul
 rem tar -xf "%mainfolder%\python_3.9.9_win64.zip" -C "%mainfolder%\alpha_python"
+if not exist "%mainfolder%\alpha_python\python.exe" (
+echo    Failed to install Python!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
 :mariadb_download
 if exist "%mainfolder%\alpha_mariadb" goto python_install
 rem if exist "%mainfolder%\mariadb_10.11.3_win64.zip" goto mariadb_extract
@@ -66,6 +89,17 @@ rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.11.3_w
 rem tar -xf "%mainfolder%\mariadb_10.11.3_win64.zip"
 rem rename "%mainfolder%\mariadb-10.11.3-winx64" "alpha_mariadb"
 rename "%mainfolder%\mariadb-10.4.12-winx64" "alpha_mariadb"
+if not exist "%mainfolder%\alpha_mariadb" (
+echo    Failed to install MariaDB!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
 
 :end_download
 cls
