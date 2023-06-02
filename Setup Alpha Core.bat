@@ -43,24 +43,28 @@ if not exist "%mainfolder%\alpha_python" mkdir "%mainfolder%\alpha_python"
 "%mainfolder%\alpha_tools\7za.exe" -y -spf e -o"%mainfolder%\alpha_python" "%mainfolder%\python_3.9.9_win64.zip" > nul
 rem tar -xf "%mainfolder%\python_3.9.9_win64.zip" -C "%mainfolder%\alpha_python"
 :mariadb_download
-if exist "%mainfolder%\mariadb_10.11.3_win64.zip" goto mariadb_extract
+if exist "%mainfolder%\alpha_mariadb" goto python_install
+rem if exist "%mainfolder%\mariadb_10.11.3_win64.zip" goto mariadb_extract
+if exist "%mainfolder%\mariadb_10.4.12_win64.zip" goto mariadb_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
-echo    Downloading MariaDB 10.11.3...
+rem echo    Downloading MariaDB 10.11.3...
+echo    Downloading MariaDB 10.4.12...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip" -O "%mainfolder%\mariadb_10.11.3_win64.zip"
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://archive.mariadb.org/mariadb-10.4.12/winx64-packages/mariadb-10.4.12-winx64.zip" -O "%mainfolder%\mariadb_10.4.12_win64.zip"
 rem curl -L -o "mariadb_10.11.3_win64.zip" "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip"
 :mariadb_extract
-if exist "%mainfolder%\alpha_mariadb" goto python_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Extracting MariaDB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.11.3_win64.zip" > nul
+rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.11.3_win64.zip" > nul
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.4.12_win64.zip" > nul
 rem tar -xf "%mainfolder%\mariadb_10.11.3_win64.zip"
-rename "%mainfolder%\mariadb-10.11.3-winx64" "alpha_mariadb"
+rem rename "%mainfolder%\mariadb-10.11.3-winx64" "alpha_mariadb"
+rename "%mainfolder%\mariadb-10.4.12-winx64" "alpha_mariadb"
 
 :end_download
 cls
@@ -76,6 +80,23 @@ more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Preparing Python...
 ping -n 2 127.0.0.1>nul
+:compatibility_dll
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
+echo.
+echo    Downloading Windows 7
+echo    compatibility module for Python...
+ping -n 2 127.0.0.1>nul
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/nalexandru/api-ms-win-core-path-HACK/releases/download/0.3.1/api-ms-win-core-path-blender-0.3.1.zip" -O "%mainfolder%\alpha_python\api.zip"
+echo.
+echo    Extracting...
+ping -n 2 127.0.0.1>nul
+cd "%mainfolder%\alpha_python"
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_python\api.zip" > nul
+xcopy /y "%mainfolder%\alpha_python\api-ms-win-core-path-blender\x64\api-ms-win-core-path-l1-1-0.dll" "%mainfolder%\alpha_python">nul
+del "%mainfolder%\alpha_python\api.zip"
+cd "%mainfolder%"
+
 :pip_download
 rem if exist "%mainfolder%\alpha_python\get-pip.py" goto pip_install
 cls
@@ -143,7 +164,7 @@ echo    Python Requirements Installed!
 ping -n 2 127.0.0.1>nul
 
 :mariadb_install
-if exist "%mainfolder%\alpha_mariadb\data" goto database_install
+rem if exist "%mainfolder%\alpha_mariadb\data" goto database_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
@@ -178,14 +199,14 @@ echo    Installing World DB
 ping -n 2 127.0.0.1>nul
 echo     - Create World DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "drop database if exists alpha_world";
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "create database alpha_world";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "drop database if exists alpha_world";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "create database alpha_world";
 echo     - Populate World DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_world -e "source alpha_core\etc\databases\world\world.sql"
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 --database=alpha_world < "%mainfolder%\alpha_core\etc\databases\world\world.sql"
 echo     - Update World DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_world -e "source alpha_core\etc\databases\world\updates\updates.sql"
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 --database=alpha_world < "%mainfolder%\alpha_core\etc\databases\world\updates\updates.sql"
 :install_realm
 if exist "%mainfolder%\alpha_mariadb\data\alpha_realm" goto install_dbc
 echo.
@@ -193,14 +214,14 @@ echo    Installing Realm DB
 ping -n 2 127.0.0.1>nul
 echo     - Create Realm DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "drop database if exists alpha_realm";
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "create database alpha_realm";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "drop database if exists alpha_realm";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "create database alpha_realm";
 echo     - Populate Realm DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_realm -e "source alpha_core\etc\databases\realm\realm.sql"
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 --database=alpha_realm < "%mainfolder%\alpha_core\etc\databases\realm\realm.sql"
 echo     - Update Realm DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_realm -e "source alpha_core\etc\databases\realm\updates\updates.sql"
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 --database=alpha_realm < "%mainfolder%\alpha_core\etc\databases\realm\updates\updates.sql"
 :install_dbc
 if exist "%mainfolder%\alpha_mariadb\data\alpha_dbc" goto set_server_localhost
 echo.
@@ -208,19 +229,19 @@ echo    Installing Dbc DB
 ping -n 2 127.0.0.1>nul
 echo     - Create Dbc DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "drop database if exists alpha_dbc";
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "create database alpha_dbc";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "drop database if exists alpha_dbc";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "create database alpha_dbc";
 echo     - Populate Dbc DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_dbc -e "source alpha_core\etc\databases\dbc\dbc.sql"
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 --database=alpha_dbc < "%mainfolder%\alpha_core\etc\databases\dbc\dbc.sql"
 echo     - Update Dbc DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_dbc -e "source alpha_core\etc\databases\dbc\updates\updates.sql"
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 --database=alpha_dbc < "%mainfolder%\alpha_core\etc\databases\dbc\updates\updates.sql"
 :set_server_localhost
 echo.
 echo    Setting Address to 127.0.0.1...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "UPDATE `alpha_realm`.`realmlist` SET `realm_name` = 'Alpha Core', `proxy_address`='127.0.0.1', `realm_address`='127.0.0.1' WHERE  `realm_id`=1";
+"%mainfolder%\alpha_mariadb\bin\mysql.exe" --user=root --password=pwd --default-character-set=utf8 --port=3306 -e "UPDATE `alpha_realm`.`realmlist` SET `realm_name` = 'Alpha Core', `proxy_address`='127.0.0.1', `realm_address`='127.0.0.1' WHERE  `realm_id`=1";
 :end_db_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
