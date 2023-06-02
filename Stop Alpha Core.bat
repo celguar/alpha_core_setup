@@ -55,21 +55,20 @@ ping -n 3 127.0.0.1>nul
 goto ending
 )
 echo    Stopping Alpha Core...
-ping -n 3 127.0.0.1>nul
+ping -n 2 127.0.0.1>nul
 cd "%mainfolder%\alpha_tools"
 start "" /min "%mainfolder%\alpha_tools\stop_alpha_core.bat"
 cd "%mainfolder%"
-ping -n 3 127.0.0.1>nul
 :stop_mariadb
 echo.
 echo    Stopping MariaDB...
-ping -n 3 127.0.0.1>nul
+ping -n 2 127.0.0.1>nul
 cd "%mainfolder%\alpha_tools"
 start "" /min "%mainfolder%\alpha_tools\stop_mariadb.bat"
 cd "%mainfolder%"
 echo.
 echo    Done!
-ping -n 3 127.0.0.1>nul
+ping -n 2 127.0.0.1>nul
 
 :ending
 exit

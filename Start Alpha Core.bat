@@ -57,12 +57,12 @@ goto error_install
 )
 cd "%mainfolder%\alpha_tools"
 echo    Starting MariaDB...
-ping -n 3 127.0.0.1>nul
+ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_mariadb.bat"
 cd "%mainfolder%\alpha_core"
 echo.
 echo    Starting Alpha Core...
-ping -n 3 127.0.0.1>nul
+ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_alpha_core.bat"
 rem start "" "%mainfolder%\alpha_python\python.exe" "%mainfolder%\alpha_core\main.py"
 cd "%mainfolder%"
