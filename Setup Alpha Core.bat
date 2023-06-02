@@ -216,6 +216,8 @@ echo.
 rem cd "%mainfolder%\mariadb\bin"
 if not exist "%mainfolder%\alpha_mariadb\data" mkdir "%mainfolder%\alpha_mariadb\data"
 "%mainfolder%\alpha_mariadb\bin\mysql_install_db.exe" --datadir="%mainfolder%\alpha_mariadb\data" --password=pwd
+rem save path to file
+>"%mainfolder%\alpha_mariadb\portable_install_path.txt" echo %mainfolder%
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
