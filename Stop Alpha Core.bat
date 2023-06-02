@@ -20,7 +20,7 @@ if not exist "%mainfolder%\alpha_mariadb" (
 echo    MariaDB missing!
 goto error_install
 )
-if not exist "%mainfolder%\alpha_python\get-pip.py" (
+if not exist "%mainfolder%\alpha_downloads\get-pip.py" (
 echo    Python Pip module missing!
 goto error_install
 )
@@ -71,6 +71,11 @@ echo    Done!
 ping -n 2 127.0.0.1>nul
 
 :ending
+rem restore original main.py
+if exist "%mainfolder%\alpha_core\backup\main.py" (
+if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py"
+xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core"
+)
 exit
 
 :error_install

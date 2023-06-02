@@ -20,7 +20,7 @@ if not exist "%mainfolder%\alpha_mariadb" (
 echo    MariaDB missing!
 goto error_install
 )
-if not exist "%mainfolder%\alpha_python\get-pip.py" (
+if not exist "%mainfolder%\alpha_downloads\get-pip.py" (
 echo    Python Pip module missing!
 goto error_install
 )
@@ -48,12 +48,14 @@ if not exist "%mainfolder%\alpha_core\etc\config\config.yml" (
 echo    Config is missing!
 goto error_install
 )
+set "maps_enabled=false"
+if exist "%mainfolder%\alpha_core\etc\maps" set maps_enabled=true
 :core_download
 echo    Downloading Update...
 ping -n 2 127.0.0.1>nul
-if exist "%mainfolder%\alpha_core_master.zip" del "%mainfolder%\alpha_core_master.zip"
+if exist "%mainfolder%\alpha_downloads\alpha_core_master.zip" del "%mainfolder%\alpha_downloads\alpha_core_master.zip"
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip" -O "%mainfolder%\alpha_core_master.zip"
-curl -L -o "alpha_core_master.zip" "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip"
+curl -L -o "%mainfolder%\alpha_downloads\alpha_core_master.zip" "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip"
 :core_extract
 rmdir /Q /S "%mainfolder%\alpha_core"
 cls
@@ -63,7 +65,7 @@ echo    Extracting Update...
 ping -n 2 127.0.0.1>nul
 rem tar -xf alpha-core-master.zip "%mainfolder%"
 rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_core_master.zip" > nul
-tar -xf "alpha_core_master.zip"
+tar -xf "%mainfolder%\alpha_downloads\alpha_core_master.zip"
 rename "%mainfolder%\alpha-core-master" "alpha_core"
 
 :end_download
@@ -115,6 +117,9 @@ start "" /min "%mainfolder%\alpha_tools\stop_mariadb.bat"
 cd "%mainfolder%"
 
 :config_rename
+rem backup original config
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup"
+if not exist "%mainfolder%\alpha_core\backup\config.yml.dist" xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 if exist "%mainfolder%\alpha_core\etc\config\config.yml" goto set_server_localhost
@@ -166,20 +171,37 @@ setlocal enableextensions disabledelayedexpansion
     )
 endlocal
 
-:fix_python_paths
+:reextract_maps
+if "%maps_enabled%"=="true" (
+if not exist "%mainfolder%\alpha_downloads\maps.zip" goto backup_main_py
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
-echo    Fixing Python Path...
+echo    Extracting Maps...
 ping -n 2 127.0.0.1>nul
-set properpath=%mainfolder%
-set "properpath=%properpath:\=/%"
-rem "%mainfolder%\alpha_tools\fart.exe" -C "%mainfolder%\alpha_core\main.py" "from time import sleep" "from time import sleep\r\n\r\nimport sys\r\nsys.path.insert(0, 'path_placeholder')"
-rem "%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\main.py" "path_placeholder" "%properpath%/alpha_core/"
+cd "%mainfolder%\alpha_core\etc"
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_downloads\maps.zip" > nul
+rem tar -xf "%mainfolder%\alpha_core\etc\maps.zip" -C "%mainfolder%\alpha_core\etc"
+cd "%mainfolder%"
+
+:end_download
+echo.
+echo Extraction Complete!
+ping -n 2 127.0.0.1>nul
+
+:set_server_maps
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
+echo.
+echo    Setting Config to use maps...
+ping -n 2 127.0.0.1>nul
+rem "%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "use_map_tiles: False" "use_map_tiles: True"
 setlocal enableextensions disabledelayedexpansion
 
-    set "search=from time import sleep"
-    set "replace=from time import sleep;import sys;sys.path.insert^(0, '%properpath%/alpha_core/'^)"
+    set "search=use_map_tiles: False"
+    set "replace=use_map_tiles: True"
 
-    set "textFile=%mainfolder%\alpha_core\main.py"
+    set "textFile=%mainfolder%\alpha_core\etc\config\config.yml"
 
     for /f "delims=" %%i in ('type "%textFile%" ^& break ^> "%textFile%" ') do (
         set "line=%%i"
@@ -188,6 +210,11 @@ setlocal enableextensions disabledelayedexpansion
         endlocal
     )
 endlocal
+)
+
+:backup_main_py
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup">nul
+if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
 
 :end_install
 cls

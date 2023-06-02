@@ -6,13 +6,15 @@ TITLE %NAME%
 set mainfolder=%CD%
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
+if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 :core_download
-if exist "%mainfolder%\alpha_core_master.zip" goto core_extract
+if exist "%mainfolder%\alpha_core" goto python_download
+if exist "%mainfolder%\alpha_downloads\alpha_core_master.zip" goto core_extract
 echo.
 echo    Downloading Alpha Core...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip" -O "%mainfolder%\alpha_core_master.zip"
-curl -L -o "alpha_core_master.zip" "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip"
+curl -L -o "%mainfolder%\alpha_downloads\alpha_core_master.zip" "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip"
 :core_extract
 if exist "%mainfolder%\alpha_core" goto python_download
 cls
@@ -21,17 +23,29 @@ echo.
 echo    Extracting Alpha Core...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_core_master.zip" > nul
-tar -xf "alpha_core_master.zip"
+tar -xf "%mainfolder%\alpha_downloads\alpha_core_master.zip"
 rename "%mainfolder%\alpha-core-master" "alpha_core"
+rem CHECK INSTALL
+if not exist "%mainfolder%\alpha_core" (
+echo    Failed to install Alpha Core!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
 :python_download
-if exist "%mainfolder%\python_3.9.9_win64.zip" goto python_extract
+if exist "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip" goto python_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Downloading Python 3.9...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-amd64.zip" -O "%mainfolder%\python_3.9.9_win64.zip"
-curl -L -o "python_3.9.9_win64.zip" "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-amd64.zip"
+curl -L -o "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip" "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-amd64.zip"
 :python_extract
 if exist "%mainfolder%\alpha_python" goto mariadb_download
 cls
@@ -41,26 +55,48 @@ echo    Extracting Python...
 ping -n 2 127.0.0.1>nul
 if not exist "%mainfolder%\alpha_python" mkdir "%mainfolder%\alpha_python"
 rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e -o"%mainfolder%\alpha_python" "%mainfolder%\python_3.9.9_win64.zip" > nul
-tar -xf "%mainfolder%\python_3.9.9_win64.zip" -C "%mainfolder%\alpha_python"
+tar -xf "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip" -C "%mainfolder%\alpha_python"
+if not exist "%mainfolder%\alpha_python\python.exe" (
+echo    Failed to install Python!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
 :mariadb_download
-if exist "%mainfolder%\mariadb_10.11.3_win64.zip" goto mariadb_extract
+if exist "%mainfolder%\alpha_mariadb" goto python_install
+if exist "%mainfolder%\alpha_downloads\mariadb_10.11.3_win64.zip" goto mariadb_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Downloading MariaDB 10.11.3...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip" -O "%mainfolder%\mariadb_10.11.3_win64.zip"
-curl -L -o "mariadb_10.11.3_win64.zip" "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip"
+curl -L -o "%mainfolder%\alpha_downloads\mariadb_10.11.3_win64.zip" "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip"
 :mariadb_extract
-if exist "%mainfolder%\alpha_mariadb" goto python_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Extracting MariaDB...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.11.3_win64.zip" > nul
-tar -xf "%mainfolder%\mariadb_10.11.3_win64.zip"
+tar -xf "%mainfolder%\alpha_downloads\mariadb_10.11.3_win64.zip"
 rename "%mainfolder%\mariadb-10.11.3-winx64" "alpha_mariadb"
+if not exist "%mainfolder%\alpha_mariadb" (
+echo    Failed to install MariaDB!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
 
 :end_download
 cls
@@ -70,7 +106,7 @@ echo    Extraction Complete!
 ping -n 2 127.0.0.1>nul
 
 :python_install
-if exist "%mainfolder%\alpha_python\get-pip.py" goto pip_install
+if exist "%mainfolder%\alpha_downloads\get-pip.py" goto pip_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
@@ -86,7 +122,7 @@ echo.
 echo    Downloading Pip...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://bootstrap.pypa.io/get-pip.py" -O "%mainfolder%\alpha_python\get-pip.py"
-curl -L -o "%mainfolder%\alpha_python\get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+curl -L -o "%mainfolder%\alpha_downloads\get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 :pip_install
 if exist "%mainfolder%\alpha_python\Scripts\pip3.exe" goto pip_requirements
 cls
@@ -99,7 +135,7 @@ echo.
 echo    Installing Pip...
 ping -n 2 127.0.0.1>nul
 cd "%mainfolder%\alpha_python"
-"%mainfolder%\alpha_python\python.exe" get-pip.py
+"%mainfolder%\alpha_python\python.exe" "%mainfolder%\alpha_downloads\get-pip.py"
 cd "%mainfolder%"
 :pip_requirements
 if exist "%mainfolder%\alpha_python\include" goto mariadb_install
@@ -249,6 +285,9 @@ start "" /min "%mainfolder%\alpha_tools\stop_mariadb.bat"
 cd "%mainfolder%"
 
 :config_rename
+rem backup original config
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup"
+if not exist "%mainfolder%\alpha_core\backup\config.yml.dist" xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 if exist "%mainfolder%\alpha_core\etc\config\config.yml" goto set_server_localhost
@@ -258,7 +297,7 @@ ping -n 2 127.0.0.1>nul
 echo.
 echo    config.yml.dist --^> config.yml
 ping -n 2 127.0.0.1>nul
-if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolder%\alpha_core\etc\config\config.yml.dist" "config.yml"
+if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolder%\alpha_core\etc\config\config.yml.dist" "config.yml">nul
 
 :set_server_localhost
 echo.
@@ -300,28 +339,9 @@ setlocal enableextensions disabledelayedexpansion
     )
 endlocal
 
-:fix_python_paths
-echo.
-echo    Fixing Python Path...
-ping -n 2 127.0.0.1>nul
-set properpath=%mainfolder%
-set "properpath=%properpath:\=/%"
-setlocal enableextensions disabledelayedexpansion
-
-    set "search=from time import sleep"
-    set "replace=from time import sleep;import sys;sys.path.insert^(0, '%properpath%/alpha_core/'^)"
-
-    set "textFile=%mainfolder%\alpha_core\main.py"
-
-    for /f "delims=" %%i in ('type "%textFile%" ^& break ^> "%textFile%" ') do (
-        set "line=%%i"
-        setlocal enabledelayedexpansion
-        >>"%textFile%" echo(!line:%search%=%replace%!
-        endlocal
-    )
-endlocal
-rem "%mainfolder%\alpha_tools\fart.exe" -C "%mainfolder%\alpha_core\main.py" "from time import sleep" "from time import sleep\r\n\r\nimport sys\r\nsys.path.insert(0, 'path_placeholder')"
-rem "%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\main.py" "path_placeholder" "%properpath%/alpha_core/"
+:backup_main_py
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup">nul
+if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
 
 :add_client_info
 mkdir "%mainfolder%\alpha_client"
@@ -355,5 +375,5 @@ echo.
 echo    Alpha Core Installation Complete!
 ping -n 3 127.0.0.1>nul
 echo.
-notepad "%mainfolder%\README.md"
+start "" "notepad.exe" "%mainfolder%\README.md"
 exit

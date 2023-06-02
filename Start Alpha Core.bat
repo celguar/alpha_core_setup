@@ -27,7 +27,7 @@ if not exist "%mainfolder%\alpha_mariadb" (
 echo    MariaDB missing!
 goto error_install
 )
-if not exist "%mainfolder%\alpha_python\get-pip.py" (
+if not exist "%mainfolder%\alpha_downloads\get-pip.py" (
 echo    Python Pip module missing!
 goto error_install
 )
@@ -55,10 +55,45 @@ if not exist "%mainfolder%\alpha_core\etc\config\config.yml" (
 echo    Config is missing!
 goto error_install
 )
+
+:start_mariadb
 cd "%mainfolder%\alpha_tools"
 echo    Starting MariaDB...
 ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_mariadb.bat"
+
+rem do it every time in case repack is moved
+:fix_python_paths
+set properpath=%mainfolder%
+set "properpath=%properpath:\=/%"
+rem restore original main.py
+if exist "%mainfolder%\alpha_core\backup\main.py" (
+if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py"
+xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core"
+)
+rem add core path to sys path
+:fix_python_paths
+echo.
+echo    Fixing Python Path...
+ping -n 2 127.0.0.1>nul
+set properpath=%mainfolder%
+set "properpath=%properpath:\=/%"
+setlocal enableextensions disabledelayedexpansion
+
+    set "search=from time import sleep"
+    set "replace=from time import sleep;import sys;sys.path.insert^(0, '%properpath%/alpha_core/'^)"
+
+    set "textFile=%mainfolder%\alpha_core\main.py"
+
+    for /f "delims=" %%i in ('type "%textFile%" ^& break ^> "%textFile%" ') do (
+        set "line=%%i"
+        setlocal enabledelayedexpansion
+        >>"%textFile%" echo(!line:%search%=%replace%!
+        endlocal
+    )
+endlocal
+
+:start_core
 cd "%mainfolder%\alpha_core"
 echo.
 echo    Starting Alpha Core...
