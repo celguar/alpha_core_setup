@@ -14,7 +14,6 @@ echo    Alpha Core is already running!
 ping -n 3 127.0.0.1>nul
 goto ending
 )
-ping -n 3 127.0.0.1>nul
 if not exist "%mainfolder%\alpha_core" (
 echo    Alpha Core missing!
 goto error_install
@@ -27,7 +26,7 @@ if not exist "%mainfolder%\alpha_mariadb" (
 echo    MariaDB missing!
 goto error_install
 )
-if not exist "%mainfolder%\alpha_python\get-pip.py" (
+if not exist "%mainfolder%\alpha_downloads\get-pip.py" (
 echo    Python Pip module missing!
 goto error_install
 )
@@ -55,16 +54,32 @@ if not exist "%mainfolder%\alpha_core\etc\config\config.yml" (
 echo    Config is missing!
 goto error_install
 )
+
+:start_mariadb
 cd "%mainfolder%\alpha_tools"
 echo    Starting MariaDB...
 ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_mariadb.bat"
+
+rem do it every time in case repack is moved
+:fix_python_paths
+set properpath=%mainfolder%
+set "properpath=%properpath:\=/%"
+rem restore original main.py
+if exist "%mainfolder%\alpha_core\backup\main.py" (
+if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py"
+xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core"
+)
+rem add core path to sys path
+"%mainfolder%\alpha_tools\fart.exe" -C "%mainfolder%\alpha_core\main.py" "from time import sleep" "from time import sleep\r\n\r\nimport sys\r\nsys.path.insert(0, 'path_placeholder')"
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\main.py" "path_placeholder" "%properpath%/alpha_core/"
+
+:start_core
 cd "%mainfolder%\alpha_core"
 echo.
 echo    Starting Alpha Core...
 ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_alpha_core.bat"
-rem start "" "%mainfolder%\alpha_python\python.exe" "%mainfolder%\alpha_core\main.py"
 cd "%mainfolder%"
 
 :ending

@@ -6,13 +6,14 @@ TITLE %NAME%
 set mainfolder=%CD%
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
+if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 :core_download
 if exist "%mainfolder%\alpha_core" goto python_download
-if exist "%mainfolder%\alpha_core_master.zip" goto core_extract
+if exist "%mainfolder%\alpha_downloads\alpha_core_master.zip" goto core_extract
 echo.
 echo    Downloading Alpha Core...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip" -O "%mainfolder%\alpha_core_master.zip"
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip" -O "%mainfolder%\alpha_downloads\alpha_core_master.zip"
 rem curl -L -o "alpha_core_master.zip" "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip"
 :core_extract
 if exist "%mainfolder%\alpha_core" goto python_download
@@ -21,7 +22,7 @@ more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Extracting Alpha Core...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_core_master.zip" > nul
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_downloads\alpha_core_master.zip" > nul
 rem tar -xf "alpha_core_master.zip"
 rename "%mainfolder%\alpha-core-master" "alpha_core"
 rem CHECK INSTALL
@@ -37,13 +38,13 @@ ping -n 3 127.0.0.1>nul
 exit
 )
 :python_download
-if exist "%mainfolder%\python_3.9.9_win64.zip" goto python_extract
+if exist "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip" goto python_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Downloading Python 3.9...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-amd64.zip" -O "%mainfolder%\python_3.9.9_win64.zip"
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-amd64.zip" -O "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip"
 rem curl -L -o "python_3.9.9_win64.zip" "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-amd64.zip"
 :python_extract
 if exist "%mainfolder%\alpha_python" goto mariadb_download
@@ -53,7 +54,7 @@ echo.
 echo    Extracting Python...
 ping -n 2 127.0.0.1>nul
 if not exist "%mainfolder%\alpha_python" mkdir "%mainfolder%\alpha_python"
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e -o"%mainfolder%\alpha_python" "%mainfolder%\python_3.9.9_win64.zip" > nul
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e -o"%mainfolder%\alpha_python" "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip" > nul
 rem tar -xf "%mainfolder%\python_3.9.9_win64.zip" -C "%mainfolder%\alpha_python"
 if not exist "%mainfolder%\alpha_python\python.exe" (
 echo    Failed to install Python!
@@ -69,14 +70,14 @@ exit
 :mariadb_download
 if exist "%mainfolder%\alpha_mariadb" goto python_install
 rem if exist "%mainfolder%\mariadb_10.11.3_win64.zip" goto mariadb_extract
-if exist "%mainfolder%\mariadb_10.4.12_win64.zip" goto mariadb_extract
+if exist "%mainfolder%\alpha_downloads\mariadb_10.4.12_win64.zip" goto mariadb_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 rem echo    Downloading MariaDB 10.11.3...
 echo    Downloading MariaDB 10.4.12...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://archive.mariadb.org/mariadb-10.4.12/winx64-packages/mariadb-10.4.12-winx64.zip" -O "%mainfolder%\mariadb_10.4.12_win64.zip"
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://archive.mariadb.org/mariadb-10.4.12/winx64-packages/mariadb-10.4.12-winx64.zip" -O "%mainfolder%\alpha_downloads\mariadb_10.4.12_win64.zip"
 rem curl -L -o "mariadb_10.11.3_win64.zip" "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip"
 :mariadb_extract
 cls
@@ -85,7 +86,7 @@ echo.
 echo    Extracting MariaDB...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.11.3_win64.zip" > nul
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\mariadb_10.4.12_win64.zip" > nul
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_downloads\mariadb_10.4.12_win64.zip" > nul
 rem tar -xf "%mainfolder%\mariadb_10.11.3_win64.zip"
 rem rename "%mainfolder%\mariadb-10.11.3-winx64" "alpha_mariadb"
 rename "%mainfolder%\mariadb-10.4.12-winx64" "alpha_mariadb"
@@ -109,7 +110,7 @@ echo    Extraction Complete!
 ping -n 2 127.0.0.1>nul
 
 :python_install
-if exist "%mainfolder%\alpha_python\get-pip.py" goto pip_install
+if exist "%mainfolder%\alpha_python\api-ms-win-core-path-l1-1-0.dll" goto pip_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
@@ -122,19 +123,24 @@ echo.
 echo    Downloading Windows 7
 echo    compatibility module for Python...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/nalexandru/api-ms-win-core-path-HACK/releases/download/0.3.1/api-ms-win-core-path-blender-0.3.1.zip" -O "%mainfolder%\alpha_python\api.zip"
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/nalexandru/api-ms-win-core-path-HACK/releases/download/0.3.1/api-ms-win-core-path-blender-0.3.1.zip" -O "%mainfolder%\alpha_downloads\api-ms-win-core-path-blender-0.3.1.zip"
 echo.
 echo    Extracting...
 ping -n 2 127.0.0.1>nul
-cd "%mainfolder%\alpha_python"
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_python\api.zip" > nul
-xcopy /y "%mainfolder%\alpha_python\api-ms-win-core-path-blender\x64\api-ms-win-core-path-l1-1-0.dll" "%mainfolder%\alpha_python">nul
-del "%mainfolder%\alpha_python\api.zip"
-rmdir /Q /S "%mainfolder%\alpha_python\api-ms-win-core-path-blender"
+cd "%mainfolder%\alpha_downloads"
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_downloads\api-ms-win-core-path-blender-0.3.1.zip" > nul
+xcopy /y "%mainfolder%\alpha_downloads\api-ms-win-core-path-blender\x64\api-ms-win-core-path-l1-1-0.dll" "%mainfolder%\alpha_python">nul
+rem del "%mainfolder%\alpha_downloads\api-ms-win-core-path-blender-0.3.1.zip"
+rmdir /Q /S "%mainfolder%\alpha_downloads\api-ms-win-core-path-blender"
 cd "%mainfolder%"
 
+:python_prepare
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
+echo.
+echo    Preparing Python...
 :pip_download
-rem if exist "%mainfolder%\alpha_python\get-pip.py" goto pip_install
+if exist "%mainfolder%\alpha_downloads\get-pip.py" goto pip_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
@@ -142,7 +148,7 @@ echo    Preparing Python...
 echo.
 echo    Downloading Pip...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://bootstrap.pypa.io/get-pip.py" -O "%mainfolder%\alpha_python\get-pip.py"
+"%mainfolder%\alpha_tools\wget.exe" -q "https://bootstrap.pypa.io/get-pip.py" -O "%mainfolder%\alpha_downloads\get-pip.py"
 rem curl -L -o "%mainfolder%\alpha_python\get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 :pip_install
 if exist "%mainfolder%\alpha_python\Scripts\pip3.exe" goto pip_requirements
@@ -156,7 +162,7 @@ echo.
 echo    Installing Pip...
 ping -n 2 127.0.0.1>nul
 cd "%mainfolder%\alpha_python"
-"%mainfolder%\alpha_python\python.exe" get-pip.py
+"%mainfolder%\alpha_python\python.exe" "%mainfolder%\alpha_downloads\get-pip.py"
 cd "%mainfolder%"
 :pip_requirements
 if exist "%mainfolder%\alpha_python\include" goto mariadb_install
@@ -200,7 +206,7 @@ echo    Python Requirements Installed!
 ping -n 2 127.0.0.1>nul
 
 :mariadb_install
-rem if exist "%mainfolder%\alpha_mariadb\data" goto database_install
+if exist "%mainfolder%\alpha_mariadb\data\mysql" goto database_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
@@ -294,6 +300,9 @@ cd "%mainfolder%"
 :config_rename
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
+rem backup original config
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup"
+if not exist "%mainfolder%\alpha_core\backup\config.yml.dist" xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
 if exist "%mainfolder%\alpha_core\etc\config\config.yml" goto set_server_localhost
 echo.
 echo    Renaming Config...
@@ -301,28 +310,23 @@ ping -n 2 127.0.0.1>nul
 echo.
 echo    config.yml.dist --^> config.yml
 ping -n 2 127.0.0.1>nul
-if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolder%\alpha_core\etc\config\config.yml.dist" "config.yml"
+if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolder%\alpha_core\etc\config\config.yml.dist" "config.yml">nul
 
 :set_server_localhost
 echo.
 echo    Setting Config to 127.0.0.1...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: 127.0.0.1"
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: 127.0.0.1">nul
 
 :set_gm_acc_default
 echo.
 echo    Setting GM acc as default...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "auto_create_gm_accounts: False" "auto_create_gm_accounts: True"
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "auto_create_gm_accounts: False" "auto_create_gm_accounts: True">nul
 
-:fix_python_paths
-echo.
-echo    Fixing Python Path...
-ping -n 2 127.0.0.1>nul
-set properpath=%mainfolder%
-set "properpath=%properpath:\=/%"
-"%mainfolder%\alpha_tools\fart.exe" -C "%mainfolder%\alpha_core\main.py" "from time import sleep" "from time import sleep\r\n\r\nimport sys\r\nsys.path.insert(0, 'path_placeholder')"
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\main.py" "path_placeholder" "%properpath%/alpha_core/"
+:backup_main_py
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup">nul
+if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
 
 :add_client_info
 mkdir "%mainfolder%\alpha_client"

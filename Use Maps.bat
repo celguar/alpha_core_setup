@@ -17,24 +17,22 @@ echo    Config is missing!
 goto error_install
 )
 :core_download
-if exist "%mainfolder%\alpha_core\etc\maps.zip" goto maps_extract
+if exist "%mainfolder%\alpha_downloads\maps.zip" goto maps_extract
 echo    Downloading Maps...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/celguar/alpha_core_setup/releases/download/v1.0/maps.zip" -O "%mainfolder%\alpha_core\etc\maps.zip"
+"%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/celguar/alpha_core_setup/releases/download/v1.0/maps.zip" -O "%mainfolder%\alpha_downloads\maps.zip"
 rem curl -L -o "%mainfolder%\alpha_core\etc\maps.zip" "https://github.com/celguar/alpha_core_setup/releases/download/v1.0/maps.zip"
 :maps_extract
 if exist "%mainfolder%\alpha_core\etc\maps" goto set_server_maps
-rmdir /Q /S "%mainfolder%\alpha_core\etc\maps"
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Extracting Maps...
 ping -n 2 127.0.0.1>nul
 cd "%mainfolder%\alpha_core\etc"
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_core\etc\maps.zip" > nul
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_downloads\maps.zip" > nul
 rem tar -xf "%mainfolder%\alpha_core\etc\maps.zip" -C "%mainfolder%\alpha_core\etc"
 cd "%mainfolder%"
-del "%mainfolder%\alpha_core\etc\maps.zip"
 
 :end_download
 echo.
