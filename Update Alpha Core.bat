@@ -20,10 +20,6 @@ if not exist "%mainfolder%\alpha_mariadb" (
 echo    MariaDB missing!
 goto error_install
 )
-if not exist "%mainfolder%\alpha_downloads\get-pip.py" (
-echo    Python Pip module missing!
-goto error_install
-)
 if not exist "%mainfolder%\alpha_python\include" (
 echo    Python packages missing!
 goto error_install
