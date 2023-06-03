@@ -16,7 +16,8 @@ if not exist "%mainfolder%\alpha_core\etc\config\config.yml" (
 echo    Config is missing!
 goto error_install
 )
-:core_download
+:maps_download
+if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 if exist "%mainfolder%\alpha_downloads\maps.zip" goto maps_extract
 echo    Downloading Maps...
 ping -n 2 127.0.0.1>nul
