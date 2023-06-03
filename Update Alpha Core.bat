@@ -46,6 +46,7 @@ goto error_install
 )
 set "maps_enabled=false"
 if exist "%mainfolder%\alpha_core\etc\maps" set maps_enabled=true
+if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 :core_download
 echo    Downloading Update...
 ping -n 2 127.0.0.1>nul
