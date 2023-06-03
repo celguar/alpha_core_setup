@@ -193,6 +193,8 @@ echo    Python Requirements Installed!
 ping -n 2 127.0.0.1>nul
 
 :mariadb_install
+rem save path to file
+>"%mainfolder%\alpha_mariadb\portable_install_path.txt" echo %mainfolder%
 if exist "%mainfolder%\alpha_mariadb\data" goto database_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"

@@ -14,7 +14,6 @@ echo    Alpha Core is already running!
 ping -n 3 127.0.0.1>nul
 goto ending
 )
-ping -n 3 127.0.0.1>nul
 if not exist "%mainfolder%\alpha_core" (
 echo    Alpha Core missing!
 goto error_install
@@ -56,7 +55,36 @@ echo    Config is missing!
 goto error_install
 )
 
+:check_mariadb_path
+if not exist "%mainfolder%\alpha_mariadb\portable_install_path.txt" goto fix_mariadb_path
+set /p mariadb_install_path=<"%mainfolder%\alpha_mariadb\portable_install_path.txt"
+:compare_mariadb_path
+if "%mariadb_install_path%"=="%mainfolder%" goto start_mariadb
+:fix_mariadb_path
+rem fix mariadb path
+echo    MariaDB path changed!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Fixing...
+ping -n 2 127.0.0.1>nul
+rem cd "%mainfolder%\mariadb\bin"
+if not exist "%mainfolder%\alpha_mariadb\data" mkdir "%mainfolder%\alpha_mariadb\data"
+rem "%mainfolder%\alpha_mariadb\bin\mysql_install_db.exe" --datadir="%mainfolder%\alpha_mariadb\data" --password=pwd
+set properdbpath=%mainfolder%
+set "properdbpath=%properdbpath:\=/%"
+echo [mysqld] > "%mainfolder%\alpha_mariadb\data\my.ini"
+echo datadir=%properdbpath%/alpha_mariadb/data >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo [client] >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo plugin-dir=%properdbpath%/alpha_mariadb/lib/plugin >> "%mainfolder%\alpha_mariadb\data\my.ini"
+>"%mainfolder%\alpha_mariadb\portable_install_path.txt" echo %mainfolder%
+echo.
+echo    MariaDB Initialized!
+ping -n 2 127.0.0.1>nul
+
 :start_mariadb
+cls
+more < "%mainfolder%\alpha_tools\header_start.txt"
+echo.
 cd "%mainfolder%\alpha_tools"
 echo    Starting MariaDB...
 ping -n 2 127.0.0.1>nul
@@ -68,11 +96,10 @@ set properpath=%mainfolder%
 set "properpath=%properpath:\=/%"
 rem restore original main.py
 if exist "%mainfolder%\alpha_core\backup\main.py" (
-if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py"
-xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core"
+if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py">nul
+xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core">nul
 )
 rem add core path to sys path
-:fix_python_paths
 echo.
 echo    Fixing Python Path...
 ping -n 2 127.0.0.1>nul
