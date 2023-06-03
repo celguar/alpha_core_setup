@@ -63,10 +63,15 @@ ping -n 2 127.0.0.1>nul
 echo.
 echo    Fixing...
 ping -n 2 127.0.0.1>nul
-echo.
 rem cd "%mainfolder%\mariadb\bin"
 if not exist "%mainfolder%\alpha_mariadb\data" mkdir "%mainfolder%\alpha_mariadb\data"
-"%mainfolder%\alpha_mariadb\bin\mysql_install_db.exe" --datadir="%mainfolder%\alpha_mariadb\data" --password=pwd
+rem "%mainfolder%\alpha_mariadb\bin\mysql_install_db.exe" --datadir="%mainfolder%\alpha_mariadb\data" --password=pwd
+set properdbpath=%mainfolder%
+set "properdbpath=%properdbpath:\=/%"
+echo [mysqld] > "%mainfolder%\alpha_mariadb\data\my.ini"
+echo datadir=%properdbpath%/alpha_mariadb/data >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo [client] >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo plugin-dir=%properdbpath%/alpha_mariadb/lib/plugin >> "%mainfolder%\alpha_mariadb\data\my.ini"
 >"%mainfolder%\alpha_mariadb\portable_install_path.txt" echo %mainfolder%
 echo.
 echo    MariaDB Initialized!
@@ -87,8 +92,8 @@ set properpath=%mainfolder%
 set "properpath=%properpath:\=/%"
 rem restore original main.py
 if exist "%mainfolder%\alpha_core\backup\main.py" (
-if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py"
-xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core"
+if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py">nul
+xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core">nul
 )
 rem add core path to sys path
 "%mainfolder%\alpha_tools\fart.exe" -C "%mainfolder%\alpha_core\main.py" "from time import sleep" "from time import sleep\r\n\r\nimport sys\r\nsys.path.insert(0, 'path_placeholder')"
