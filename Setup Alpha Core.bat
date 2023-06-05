@@ -333,7 +333,7 @@ if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\bac
 if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
 
 :add_client_info
-mkdir "%mainfolder%\alpha_client"
+if not exist "%mainfolder%\alpha_client" mkdir "%mainfolder%\alpha_client"
 cd "%mainfolder%\alpha_client"
 echo. > readme.txt
 echo    Put the contents of Mods.zip ^& Addons.zip >> readme.txt
