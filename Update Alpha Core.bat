@@ -44,11 +44,14 @@ if not exist "%mainfolder%\alpha_core\etc\config\config.yml" (
 echo    Config is missing!
 goto error_install
 )
-set "maps_enabled=false"
-if exist "%mainfolder%\alpha_core\etc\maps" set maps_enabled=true
+:backup_maps
+if exist "%mainfolder%\alpha_core\etc\maps" (
+move "%mainfolder%\alpha_core\etc\maps" "%mainfolder%\alpha_downloads\maps">nul
+)
 if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 :core_download
 echo    Downloading Update...
+echo.
 ping -n 2 127.0.0.1>nul
 if exist "%mainfolder%\alpha_downloads\alpha_core_master.zip" del "%mainfolder%\alpha_downloads\alpha_core_master.zip"
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/The-Alpha-Project/alpha-core/archive/refs/heads/master.zip" -O "%mainfolder%\alpha_core_master.zip"
@@ -65,9 +68,9 @@ rem "%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_core_master
 tar -xf "%mainfolder%\alpha_downloads\alpha_core_master.zip"
 rename "%mainfolder%\alpha-core-master" "alpha_core"
 
-:end_download
+:end_core_update
 echo.
-echo    Extraction Complete!
+echo    Alpha Core Updated!
 ping -n 2 127.0.0.1>nul
 
 :database_update
@@ -168,27 +171,16 @@ setlocal enableextensions disabledelayedexpansion
     )
 endlocal
 
-:reextract_maps
-if "%maps_enabled%"=="true" (
-if not exist "%mainfolder%\alpha_downloads\maps.zip" goto backup_main_py
+:restore_maps
+if not exist "%mainfolder%\alpha_downloads\maps" goto backup_main_py    
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
-echo    Extracting Maps...
+echo    Restoring Maps...
 ping -n 2 127.0.0.1>nul
-cd "%mainfolder%\alpha_core\etc"
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_downloads\maps.zip" > nul
-rem tar -xf "%mainfolder%\alpha_core\etc\maps.zip" -C "%mainfolder%\alpha_core\etc"
-cd "%mainfolder%"
-
-:end_download
-echo.
-echo Extraction Complete!
-ping -n 2 127.0.0.1>nul
+move "%mainfolder%\alpha_downloads\maps" "%mainfolder%\alpha_core\etc\maps">nul
 
 :set_server_maps
-cls
-more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Setting Config to use maps...
 ping -n 2 127.0.0.1>nul
@@ -207,7 +199,6 @@ setlocal enableextensions disabledelayedexpansion
         endlocal
     )
 endlocal
-)
 
 :backup_main_py
 if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup">nul
