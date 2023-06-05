@@ -1,7 +1,7 @@
 @echo off
 SET NAME=Alpha Core Database
 TITLE %NAME%
-COLOR 09
+COLOR 07
 
 echo.
 echo    Alpha Core - MariaDB Server

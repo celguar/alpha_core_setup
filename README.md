@@ -25,5 +25,5 @@ Windows 10 1803 (build 17063) or above.
 1. Run ```Use Maps.bat```
 2. Wait for script to finish loading and extracting maps.
 
-## How to get client
+## Client Mods/Addons
 1. Read ```alpha_client\readme.txt```

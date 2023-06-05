@@ -346,16 +346,10 @@ if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\bac
 if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
 
 :add_client_info
-mkdir "%mainfolder%\alpha_client"
+if not exist "%mainfolder%\alpha_client" mkdir "%mainfolder%\alpha_client"
 cd "%mainfolder%\alpha_client"
 echo. > readme.txt
-echo    You can get 0.5.3 client here: >> readme.txt
-echo. >> readme.txt
-echo    https://wowdl.net/client/World-of-Warcraft-0.5.3.3368-enUS >> readme.txt
-echo. >> readme.txt
-echo. >> readme.txt
-echo    After extracting client >> readme.txt
-echo    put the contents of Mods.zip ^& Addons.zip >> readme.txt
+echo    Put the contents of Mods.zip ^& Addons.zip >> readme.txt
 echo    in the root of your 0.5.3 game folder >> readme.txt
 echo. >> readme.txt
 echo    Mods.zip removes debug stuff, adds 16:9 support and normal login screen, etc >> readme.txt
@@ -364,8 +358,7 @@ echo    Edit the `Interface\FrameXML\FrameXML.toc` file to enable or disable Add
 echo    Place a `#` to disable an AddOn, remove the `#` to enable it >> readme.txt
 echo. >> readme.txt
 echo. >> readme.txt
-echo    Start 0.5.3 ONLY by using "Start WoW.bat" >> readme.txt
-echo    that comes with the client >> readme.txt
+echo    Start 0.5.3 with "-uptodate" parameter >> readme.txt
 xcopy /y "%mainfolder%\alpha_tools\Mods.zip" "%mainfolder%\alpha_client">nul
 xcopy /y "%mainfolder%\alpha_tools\Addons.zip" "%mainfolder%\alpha_client">nul
 
