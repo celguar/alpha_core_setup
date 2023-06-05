@@ -17,6 +17,11 @@ echo    Config is missing!
 goto error_install
 )
 :maps_download
+if exist "%mainfolder%\alpha_core\etc\maps" (
+echo    Maps already added!
+ping -n 2 127.0.0.1>nul
+goto set_server_maps
+)
 if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 if exist "%mainfolder%\alpha_downloads\maps.zip" goto maps_extract
 echo    Downloading Maps...
@@ -24,7 +29,6 @@ ping -n 2 127.0.0.1>nul
 "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://github.com/celguar/alpha_core_setup/releases/download/v1.0/maps.zip" -O "%mainfolder%\alpha_downloads\maps.zip"
 rem curl -L -o "%mainfolder%\alpha_core\etc\maps.zip" "https://github.com/celguar/alpha_core_setup/releases/download/v1.0/maps.zip"
 :maps_extract
-if exist "%mainfolder%\alpha_core\etc\maps" goto set_server_maps
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
@@ -41,16 +45,12 @@ echo    Extraction Complete!
 ping -n 2 127.0.0.1>nul
 
 :set_server_maps
-cls
-more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Setting Config to use maps...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "use_map_tiles: False" "use_map_tiles: True"
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "use_map_tiles: False" "use_map_tiles: True">nul
 
 :end_install
-cls
-more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Maps Installation Complete!
 ping -n 5 127.0.0.1>nul
