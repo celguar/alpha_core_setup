@@ -44,11 +44,11 @@ if not exist "%mainfolder%\alpha_core\etc\config\config.yml" (
 echo    Config is missing!
 goto error_install
 )
+if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 :backup_maps
 if exist "%mainfolder%\alpha_core\etc\maps" (
 move "%mainfolder%\alpha_core\etc\maps" "%mainfolder%\alpha_downloads\maps">nul
 )
-if not exist "%mainfolder%\alpha_downloads" mkdir "%mainfolder%\alpha_downloads"
 :core_download
 echo    Downloading Update...
 echo.
