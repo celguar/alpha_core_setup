@@ -49,6 +49,6 @@ Windows 7
 
 
 
-## How to get client
+## Cliend Mods/Addons
 
 1. Read ```alpha_client\readme.txt```
