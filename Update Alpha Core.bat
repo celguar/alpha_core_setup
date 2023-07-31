@@ -87,6 +87,12 @@ start "" /min "%mainfolder%\alpha_tools\start_mariadb.bat"
 cd "%mainfolder%"
 :update_world
 echo.
+echo    Reinstalling World DB...
+ping -n 2 127.0.0.1>nul
+"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "drop database if exists alpha_world";
+"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "create database alpha_world";
+"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_world -e "source alpha_core\etc\databases\world\world.sql"
+echo.
 echo    Updating World DB...
 ping -n 2 127.0.0.1>nul
 "%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 alpha_world -e "source alpha_core\etc\databases\world\updates\updates.sql"
