@@ -16,6 +16,11 @@ Windows 10 1803 (build 17063) or above.
 ## How to close server after playing:
 1. Run ```Stop Alpha Core.bat```
 
+## How to change server address:
+1. Run ```Server Address Change.bat```
+2. Type desired IP address
+3. Press Enter
+
 ## How to update:
 1. Run ```Update Alpha Core.bat``` 
 2. Settings will be reset to 127.0.0.1 and default GM accounts.
