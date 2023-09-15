@@ -48,7 +48,7 @@ tasklist /FI "IMAGENAME eq python.exe" 2>NUL | find /I /N "python.exe">NUL
 if not "%ERRORLEVEL%"=="0" (
 echo    Alpha Core is not running!
 ping -n 3 127.0.0.1>nul
-goto ending
+goto stop_mariadb
 )
 echo    Stopping Alpha Core...
 ping -n 2 127.0.0.1>nul
