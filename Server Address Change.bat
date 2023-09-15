@@ -103,7 +103,7 @@ ping -n 2 127.0.0.1>nul
 echo.
 echo    Applying address to config...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: %current_server_address%" "host: %new_server_address%">nul
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: %current_server_address% #worldserver" "host: %new_server_address% #worldserver">nul
 
 :end_install
 echo.

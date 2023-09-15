@@ -326,7 +326,7 @@ if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolde
 echo.
 echo    Setting Config to 127.0.0.1...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: 127.0.0.1">nul
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: 127.0.0.1 #worldserver">nul
 
 :set_gm_acc_default
 echo.

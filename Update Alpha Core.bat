@@ -122,7 +122,7 @@ start "" /min "%mainfolder%\alpha_tools\stop_mariadb.bat"
 cd "%mainfolder%"
 
 :config_update
-set /a "current_server_address=127.0.0.1"
+set current_server_address=127.0.0.1
 if exist "%mainfolder%\alpha_mariadb\server_address.txt" set /p current_server_address=<"%mainfolder%\alpha_mariadb\server_address.txt"
 rem update backup original config
 if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup"
@@ -142,7 +142,7 @@ if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolde
 echo.
 echo    Applying old address...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: %current_server_address%">nul
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: %current_server_address% #worldserver">nul
 
 :set_gm_acc_default
 echo.
