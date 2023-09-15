@@ -121,10 +121,12 @@ cd "%mainfolder%\alpha_tools"
 start "" /min "%mainfolder%\alpha_tools\stop_mariadb.bat"
 cd "%mainfolder%"
 
-:config_rename
-rem backup original config
+:config_update
+set /a "current_server_address=127.0.0.1"
+if exist "%mainfolder%\alpha_mariadb\server_address.txt" set /p current_server_address=<"%mainfolder%\alpha_mariadb\server_address.txt"
+rem update backup original config
 if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup"
-if not exist "%mainfolder%\alpha_core\backup\config.yml.dist" xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
+xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 if exist "%mainfolder%\alpha_core\etc\config\config.yml" goto set_server_localhost
@@ -138,9 +140,9 @@ if exist "%mainfolder%\alpha_core\etc\config\config.yml.dist" rename "%mainfolde
 
 :set_server_localhost
 echo.
-echo    Setting Config to 127.0.0.1...
+echo    Applying old address...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: 127.0.0.1">nul
+"%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: %current_server_address%">nul
 
 :set_gm_acc_default
 echo.
