@@ -97,9 +97,9 @@ ping -n 2 127.0.0.1>nul
 echo.
 echo    Applying address to DB...
 ping -n 2 127.0.0.1>nul
-"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "UPDATE `alpha_realm`.`realmlist` SET  `proxy_address`='%new_server_address%', `realm_address`='%new_server_address%' WHERE  `realm_id`=1";
+"%mainfolder%\alpha_mariadb\bin\mariadb.exe" --user=root --password=pwd --port=3306 -e "UPDATE `alpha_realm`.`realmlist` SET `proxy_address`='%new_server_address%', `realm_address`='%new_server_address%' WHERE  `realm_id`=1";
 
-:congi_apply_address
+:config_apply_address
 echo.
 echo    Applying address to config...
 ping -n 2 127.0.0.1>nul
