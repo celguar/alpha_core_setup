@@ -315,7 +315,7 @@ rem "%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\conf
 setlocal enableextensions disabledelayedexpansion
 
     set "search=host: 0.0.0.0"
-    set "replace=host: 127.0.0.1"
+    set "replace=host: 127.0.0.1 #worldserver"
 
     set "textFile=%mainfolder%\alpha_core\etc\config\config.yml"
 

@@ -106,8 +106,8 @@ ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\fart.exe" "%mainfolder%\alpha_core\etc\config\config.yml" "host: 0.0.0.0" "host: 127.0.0.1"
 setlocal enableextensions disabledelayedexpansion
 
-    set "search=host: %current_server_address%"
-    set "replace=host: %new_server_address%"
+    set "search=host: %current_server_address% #worldserver"
+    set "replace=host: %new_server_address% #worldserver"
 
     set "textFile=%mainfolder%\alpha_core\etc\config\config.yml"
 
