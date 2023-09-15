@@ -306,8 +306,14 @@ cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
 rem backup original config
 if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup"
+if exist "%mainfolder%\alpha_core\backup\config.yml.dist" (
+del "%mainfolder%\alpha_core\etc\config\config.yml"
+xcopy /y "%mainfolder%\alpha_core\backup\config.yml.dist" "%mainfolder%\alpha_core\etc\config">nul
+goto config_renaming
+)
 if not exist "%mainfolder%\alpha_core\backup\config.yml.dist" xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
 if exist "%mainfolder%\alpha_core\etc\config\config.yml" goto set_server_localhost
+:config_renaming
 echo.
 echo    Renaming Config...
 ping -n 2 127.0.0.1>nul
