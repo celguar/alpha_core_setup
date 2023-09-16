@@ -31,6 +31,16 @@ Windows 7
 
 
 
+## How to change server address:
+
+1. Run ```Server Address Change.bat```
+
+2. Type desired IP address
+
+3. Press Enter
+
+
+
 ## How to update:
 
 1. Run ```Update Alpha Core.bat```
