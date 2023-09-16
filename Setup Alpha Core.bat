@@ -76,7 +76,7 @@ echo.
 echo    Downloading MariaDB 10.11.3...
 ping -n 2 127.0.0.1>nul
 rem "%mainfolder%\alpha_tools\wget.exe" -q --show-progress "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip" -O "%mainfolder%\mariadb_10.11.3_win64.zip"
-curl -L -o "%mainfolder%\alpha_downloads\mariadb_10.11.3_win64.zip" "https://mirrors.xtom.ee/mariadb/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip"
+curl -L -o "%mainfolder%\alpha_downloads\mariadb_10.11.3_win64.zip" "https://archive.mariadb.org/mariadb-10.11.3/winx64-packages/mariadb-10.11.3-winx64.zip"
 :mariadb_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
