@@ -54,6 +54,33 @@ echo    Config is missing!
 goto error_install
 )
 
+:check_mariadb_path
+if not exist "%mainfolder%\alpha_mariadb\portable_install_path.txt" goto fix_mariadb_path
+set /p mariadb_install_path=<"%mainfolder%\alpha_mariadb\portable_install_path.txt"
+:compare_mariadb_path
+if "%mariadb_install_path%"=="%mainfolder%" goto db_start
+:fix_mariadb_path
+rem fix mariadb path
+echo.
+echo    MariaDB path changed!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Fixing...
+ping -n 2 127.0.0.1>nul
+rem cd "%mainfolder%\mariadb\bin"
+if not exist "%mainfolder%\alpha_mariadb\data" mkdir "%mainfolder%\alpha_mariadb\data"
+rem "%mainfolder%\alpha_mariadb\bin\mysql_install_db.exe" --datadir="%mainfolder%\alpha_mariadb\data" --password=pwd
+set properdbpath=%mainfolder%
+set "properdbpath=%properdbpath:\=/%"
+echo [mysqld] > "%mainfolder%\alpha_mariadb\data\my.ini"
+echo datadir=%properdbpath%/alpha_mariadb/data >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo [client] >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo plugin-dir=%properdbpath%/alpha_mariadb/lib/plugin >> "%mainfolder%\alpha_mariadb\data\my.ini"
+>"%mainfolder%\alpha_mariadb\portable_install_path.txt" echo %mainfolder%
+echo.
+echo    MariaDB Initialized!
+ping -n 2 127.0.0.1>nul
+
 :db_start
 if exist "%mainfolder%\alpha_mariadb\server_address.txt" del "%mainfolder%\alpha_mariadb\server_address.txt"
 cls
