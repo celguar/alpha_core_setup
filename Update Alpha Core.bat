@@ -73,6 +73,32 @@ echo.
 echo    Alpha Core Updated!
 ping -n 2 127.0.0.1>nul
 
+:check_mariadb_path
+if not exist "%mainfolder%\alpha_mariadb\portable_install_path.txt" goto fix_mariadb_path
+set /p mariadb_install_path=<"%mainfolder%\alpha_mariadb\portable_install_path.txt"
+:compare_mariadb_path
+if "%mariadb_install_path%"=="%mainfolder%" goto database_update
+:fix_mariadb_path
+rem fix mariadb path
+echo    MariaDB path changed!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Fixing...
+ping -n 2 127.0.0.1>nul
+rem cd "%mainfolder%\mariadb\bin"
+if not exist "%mainfolder%\alpha_mariadb\data" mkdir "%mainfolder%\alpha_mariadb\data"
+rem "%mainfolder%\alpha_mariadb\bin\mysql_install_db.exe" --datadir="%mainfolder%\alpha_mariadb\data" --password=pwd
+set properdbpath=%mainfolder%
+set "properdbpath=%properdbpath:\=/%"
+echo [mysqld] > "%mainfolder%\alpha_mariadb\data\my.ini"
+echo datadir=%properdbpath%/alpha_mariadb/data >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo [client] >> "%mainfolder%\alpha_mariadb\data\my.ini"
+echo plugin-dir=%properdbpath%/alpha_mariadb/lib/plugin >> "%mainfolder%\alpha_mariadb\data\my.ini"
+>"%mainfolder%\alpha_mariadb\portable_install_path.txt" echo %mainfolder%
+echo.
+echo    MariaDB Initialized!
+ping -n 2 127.0.0.1>nul
+
 :database_update
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
