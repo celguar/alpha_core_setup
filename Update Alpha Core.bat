@@ -186,6 +186,8 @@ more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Restoring Maps...
 ping -n 2 127.0.0.1>nul
+rem remove exising folder
+if exist "%mainfolder%\alpha_core\etc\maps" rmdir /Q /S "%mainfolder%\alpha_core\etc\maps"
 move "%mainfolder%\alpha_downloads\maps" "%mainfolder%\alpha_core\etc\maps">nul
 
 :set_server_maps
