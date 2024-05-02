@@ -32,3 +32,9 @@ Windows 10 1803 (build 17063) or above.
 
 ## Client Mods/Addons
 1. Read ```alpha_client\readme.txt```
+
+## How to open world map
+
+1. Open browser
+2. Type ```127.0.0.1:5000```
+3. Press Enter
