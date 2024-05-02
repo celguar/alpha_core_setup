@@ -62,3 +62,10 @@ Windows 7
 ## Cliend Mods/Addons
 
 1. Read ```alpha_client\readme.txt```
+
+
+## How to open world map
+
+1. Open browser
+2. Type ```127.0.0.1:5000```
+3. Press Enter
