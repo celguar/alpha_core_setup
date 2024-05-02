@@ -309,7 +309,7 @@ echo.
 echo    Extracting Alpha Map...
 ping -n 2 127.0.0.1>nul
 cd "%mainfolder%"
-"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_map.zip" > nul
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_tools\alpha_map.zip" > nul
 rem CHECK INSTALL
 if not exist "%mainfolder%\alpha_map" (
 echo    Failed to install Alpha Map!
