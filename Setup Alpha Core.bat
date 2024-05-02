@@ -301,6 +301,45 @@ cd "%mainfolder%\alpha_tools"
 start "" /min "%mainfolder%\alpha_tools\stop_mariadb.bat"
 cd "%mainfolder%"
 
+:map_extract
+if exist "%mainfolder%\alpha_map" goto map_requirements
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
+echo.
+echo    Extracting Alpha Map...
+ping -n 2 127.0.0.1>nul
+cd "%mainfolder%"
+"%mainfolder%\alpha_tools\7za.exe" -y -spf e "%mainfolder%\alpha_map.zip" > nul
+rem CHECK INSTALL
+if not exist "%mainfolder%\alpha_map" (
+echo    Failed to install Alpha Map!
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Possible vcredist++ missing
+ping -n 2 127.0.0.1>nul
+echo.
+echo    Exiting installer...
+ping -n 3 127.0.0.1>nul
+exit
+)
+
+:map_requirements
+if exist "%mainfolder%\alpha_python\Lib\site-packages\flask" goto config_rename
+ping -n 2 127.0.0.1>nul
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
+echo.
+echo    Installing Map Requirements...
+ping -n 2 127.0.0.1>nul
+cd "%mainfolder%\alpha_map"
+"%mainfolder%\alpha_python\python.exe" -m pip install -r requirements.txt
+cd "%mainfolder%"
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
+echo.
+echo    Map Requirements Installed!
+ping -n 2 127.0.0.1>nul
+
 :config_rename
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
@@ -314,6 +353,8 @@ goto config_renaming
 if not exist "%mainfolder%\alpha_core\backup\config.yml.dist" xcopy /y "%mainfolder%\alpha_core\etc\config\config.yml.dist" "%mainfolder%\alpha_core\backup">nul
 if exist "%mainfolder%\alpha_core\etc\config\config.yml" goto set_server_localhost
 :config_renaming
+cls
+more < "%mainfolder%\alpha_tools\header_install.txt"
 echo.
 echo    Renaming Config...
 ping -n 2 127.0.0.1>nul
@@ -337,6 +378,9 @@ ping -n 2 127.0.0.1>nul
 :backup_main_py
 if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup">nul
 if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
+rem website
+if not exist "%mainfolder%\alpha_map\backup" mkdir "%mainfolder%\alpha_map\backup">nul
+if not exist "%mainfolder%\alpha_map\backup\main.py" xcopy /y "%mainfolder%\alpha_map\main.py" "%mainfolder%\alpha_map\backup">nul
 
 :add_client_info
 if not exist "%mainfolder%\alpha_client" mkdir "%mainfolder%\alpha_client"
