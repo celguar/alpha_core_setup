@@ -38,6 +38,7 @@ ping -n 3 127.0.0.1>nul
 exit
 )
 :python_download
+if exist "%mainfolder%\alpha_python" goto mariadb_download
 if exist "%mainfolder%\alpha_downloads\python_3.9.9_win64.zip" goto python_extract
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
