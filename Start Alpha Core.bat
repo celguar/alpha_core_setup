@@ -18,6 +18,10 @@ if not exist "%mainfolder%\alpha_core" (
 echo    Alpha Core missing!
 goto error_install
 )
+if not exist "%mainfolder%\alpha_map" (
+echo    Alpha Map missing!
+goto error_install
+)
 if not exist "%mainfolder%\alpha_python" (
 echo    Python missing!
 goto error_install
@@ -86,6 +90,13 @@ echo    Starting MariaDB...
 ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_mariadb.bat"
 
+:backup_main_py
+if not exist "%mainfolder%\alpha_core\backup" mkdir "%mainfolder%\alpha_core\backup">nul
+if not exist "%mainfolder%\alpha_core\backup\main.py" xcopy /y "%mainfolder%\alpha_core\main.py" "%mainfolder%\alpha_core\backup">nul
+rem website
+if not exist "%mainfolder%\alpha_map\backup" mkdir "%mainfolder%\alpha_map\backup">nul
+if not exist "%mainfolder%\alpha_map\backup\main.py" xcopy /y "%mainfolder%\alpha_map\main.py" "%mainfolder%\alpha_map\backup">nul
+
 rem do it every time in case repack is moved
 :fix_python_paths
 set properpath=%mainfolder%
@@ -116,12 +127,47 @@ setlocal enableextensions disabledelayedexpansion
     )
 endlocal
 
+rem map
+if exist "%mainfolder%\alpha_map\backup\main.py" (
+if exist "%mainfolder%\alpha_map\main.py" del "%mainfolder%\alpha_map\main.py">nul
+xcopy /y "%mainfolder%\alpha_map\backup\main.py" "%mainfolder%\alpha_map">nul
+)
+rem add core path to sys path
+echo.
+echo    Fixing Web Python Path...
+ping -n 2 127.0.0.1>nul
+set properpath=%mainfolder%
+set "properpath=%properpath:\=/%"
+setlocal enableextensions disabledelayedexpansion
+
+    set "search=import logging"
+    set "replace=import logging;import sys;sys.path.insert^(0, '%properpath%/alpha_map/'^)"
+
+    set "textFile=%mainfolder%\alpha_map\main.py"
+
+    for /f "delims=" %%i in ('type "%textFile%" ^& break ^> "%textFile%" ') do (
+        set "line=%%i"
+        setlocal enabledelayedexpansion
+        >>"%textFile%" echo(!line:%search%=%replace%!
+        endlocal
+    )
+endlocal
+
 :start_core
 cd "%mainfolder%\alpha_core"
 echo.
 echo    Starting Alpha Core...
 ping -n 2 127.0.0.1>nul
 start "" "%mainfolder%\alpha_tools\start_alpha_core.bat"
+rem start "" "%mainfolder%\alpha_python\python.exe" "%mainfolder%\alpha_core\main.py"
+cd "%mainfolder%"
+
+:start_map
+cd "%mainfolder%\alpha_map"
+echo.
+echo    Starting Alpha Core Map...
+ping -n 2 127.0.0.1>nul
+start "" "%mainfolder%\alpha_tools\start_alpha_map.bat"
 rem start "" "%mainfolder%\alpha_python\python.exe" "%mainfolder%\alpha_core\main.py"
 cd "%mainfolder%"
 

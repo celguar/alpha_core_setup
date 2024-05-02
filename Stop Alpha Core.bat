@@ -72,6 +72,12 @@ if exist "%mainfolder%\alpha_core\backup\main.py" (
 if exist "%mainfolder%\alpha_core\main.py" del "%mainfolder%\alpha_core\main.py"
 xcopy /y "%mainfolder%\alpha_core\backup\main.py" "%mainfolder%\alpha_core"
 )
+
+rem restore original map main.py
+if exist "%mainfolder%\alpha_map\backup\main.py" (
+if exist "%mainfolder%\alpha_map\main.py" del "%mainfolder%\alpha_map\main.py"
+xcopy /y "%mainfolder%\alpha_map\backup\main.py" "%mainfolder%\alpha_map"
+)
 exit
 
 :error_install
