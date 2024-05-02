@@ -8,5 +8,5 @@ echo    Alpha Core - Map
 echo.
 echo    Starting...
 echo.
-"..\alpha_python\python.exe" "%mainfolder%\alpha_map\main.py"\
+"..\alpha_python\python.exe" "%mainfolder%\alpha_map\main.py"
 exit
