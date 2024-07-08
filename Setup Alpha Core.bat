@@ -107,6 +107,7 @@ echo    Extraction Complete!
 ping -n 2 127.0.0.1>nul
 
 :python_install
+if exist "%mainfolder%\alpha_python\Scripts\pip3.exe" goto pip_requirements
 if exist "%mainfolder%\alpha_downloads\get-pip.py" goto pip_install
 cls
 more < "%mainfolder%\alpha_tools\header_install.txt"
